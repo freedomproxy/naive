@@ -1,0 +1,57 @@
+version: "3.9"
+name: proxy
+
+services:
+  proxy:
+    container_name: proxy
+    build:
+      context: .
+    restart: unless-stopped
+    environment:
+      - NAIVE_HOST=${NAIVE_HOST}
+      - NAIVE_USER=${NAIVE_USER}
+      - NAIVE_PASS=${NAIVE_PASS}
+      - PROXY_IP=${PROXY_IP}
+      - PROXY_USER=${PROXY_USER}
+      - PROXY_PASS=${PROXY_PASS}
+    volumes:
+      - $PWD/mask:/srv
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    sysctls:
+      - net.ipv4.tcp_congestion_control=bbr
+      - net.ipv4.tcp_slow_start_after_idle=0
+      - net.ipv4.tcp_notsent_lowat=16384
+    ports:
+      - 443:443/tcp
+      - 443:443/udp
+      - 80:80
+    networks:
+      - dnsnet
+
+  dns:
+    container_name: dns
+    build:
+      context: .
+      dockerfile: dns.Dockerfile
+    restart: unless-stopped
+    sysctls:
+      - net.ipv4.tcp_congestion_control=bbr
+      - net.ipv4.tcp_slow_start_after_idle=0
+      - net.ipv4.tcp_notsent_lowat=16384
+    ports:
+      - 53:5053/tcp
+      - 53:5053/udp
+      - 3000:3000
+    networks:
+      - dnsnet
+
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:
+
+
+networks:
+  dnsnet: {}

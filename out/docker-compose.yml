@@ -1,0 +1,63 @@
+version: "3.9"
+name: proxy
+
+services:
+  caddy:
+    container_name: caddy
+    restart: unless-stopped
+    build:
+      context: .
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/proxy.crt:/root/proxy.crt
+      - $PWD/proxy.key:/root/proxy.key
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - PROXY_USER=${PROXY_USER}
+      - PROXY_PASS=${PROXY_PASS}
+    hostname: proxy
+    sysctls:
+      - net.ipv4.tcp_congestion_control=bbr
+      - net.ipv4.tcp_slow_start_after_idle=0
+      - net.ipv4.tcp_notsent_lowat=16384
+    ports:
+      - 443:443/tcp
+      - 443:443/udp
+      - 80:80
+    networks:
+      - adnet
+
+  adguard:
+    container_name: adguard
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: adguard.Dockerfile
+    volumes:
+      - adguard_data:/opt/adguardhome/work
+      - adguard_conf:/opt/adguardhome/conf
+      - $PWD/proxy.crt:/root/proxy.crt
+      - $PWD/proxy.key:/root/proxy.key
+    hostname: guard
+    sysctls:
+      - net.ipv4.tcp_congestion_control=bbr
+      - net.ipv4.tcp_slow_start_after_idle=0
+      - net.ipv4.tcp_notsent_lowat=16384
+    ports:
+      - 444:443/tcp # dns-over-https
+      - 444:443/udp # dns-over-https (udp)
+      - 3000:3000 # control panel
+    networks:
+      - adnet
+
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:
+  adguard_data:
+  adguard_conf:
+
+
+networks:
+  adnet: {}

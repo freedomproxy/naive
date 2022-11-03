@@ -1,0 +1,51 @@
+listen_addresses = ['0.0.0.0:5053']
+
+max_clients = 250
+
+block_ipv6 = true
+block_unqualified = true
+block_undelegated = true
+reject_ttl = 10
+ipv6_servers = false
+ipv4_servers = true
+dnscrypt_servers = false
+doh_servers = true
+odoh_servers = false
+require_nolog = true
+require_dnssec = true
+require_nofilter = true
+disabled_server_names = []
+bootstrap_resolvers = ['9.9.9.11:53', '8.8.8.8:53']
+ignore_system_dns = true
+netprobe_timeout = 60
+netprobe_address = '9.9.9.9:53'
+cert_refresh_delay = 240
+timeout = 5000
+keepalive = 30
+http3 = false
+force_tcp = false
+
+cache_size = 4096
+cache_min_ttl = 2400
+cache_max_ttl = 86400
+cache_neg_min_ttl = 60
+cache_neg_max_ttl = 600
+
+server_names = ['outdns']
+
+[local_doh]
+listen_addresses = ['0.0.0.0:3000']
+path = "/dns-query"
+cert_file = "/config/dns.pem"
+cert_key_file = "/config/dns-key.pem"
+
+[broken_implementations]
+fragments_blocked = ['cisco', 'cisco-ipv6', 'cisco-familyshield', 'cisco-familyshield-ipv6', 'cleanbrowsing-adult', 'cleanbrowsing-adult-ipv6', 'cleanbrowsing-family', 'cleanbrowsing-family-ipv6', 'cleanbrowsing-security', 'cleanbrowsing-security-ipv6']
+
+[static.outdns]
+# https://dnscrypt.info/stamps/
+# Protocol - DNS-Over-HTTPS
+# Host name - IP адрес выходного сервера:444
+# Path - /dns-query
+# Все галочки оставить на месте, остальные поля пустые
+stamp = ''

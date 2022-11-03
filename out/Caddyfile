@@ -1,0 +1,14 @@
+:443
+
+tls /root/proxy.crt /root/proxy.key
+
+route {
+        forward_proxy {
+                basic_auth {$PROXY_USER} {$PROXY_PASS}
+                hide_ip
+                hide_via
+                probe_resistance
+        }
+
+        reverse_proxy adguard:3000
+}

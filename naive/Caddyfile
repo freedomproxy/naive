@@ -1,0 +1,27 @@
+:443, {$NAIVE_HOST} {
+        route {
+                forward_proxy {
+                        basic_auth {$NAIVE_USER} {$NAIVE_PASS}
+                        upstream https://{$PROXY_USER}:{$PROXY_PASS}@{$PROXY_IP}:443
+                        hide_ip
+                        hide_via
+                        probe_resistance
+                }
+
+                handle_path /dns {
+                        rewrite * /dns-query
+                        reverse_proxy https://dns:3000 {
+                                transport http {
+                                        tls_insecure_skip_verify
+                                }
+                        }
+                }
+
+                file_server
+        }
+
+}
+
+adm.{$NAIVE_HOST} {
+        reverse_proxy https://{$PROXY_IP}:443
+}

@@ -1,0 +1,45 @@
+server_names = ['outdns']
+listen_addresses = ['127.0.0.1:53']
+
+max_clients = 250
+
+block_ipv6 = true
+ipv4_servers = true
+ipv6_servers = false
+dnscrypt_servers = false
+doh_servers = true
+odoh_servers = false
+require_dnssec = true
+require_nolog = true
+require_nofilter = true
+disabled_server_names = []
+force_tcp = false
+http3 = false
+timeout = 5000
+keepalive = 30
+bootstrap_resolvers = ['9.9.9.11:53', '8.8.8.8:53']
+ignore_system_dns = true
+cert_refresh_delay = 240
+netprobe_timeout = 60
+netprobe_address = '9.9.9.9:53'
+block_unqualified = true
+block_undelegated = true
+reject_ttl = 10
+
+cache = true
+cache_size = 4096
+cache_min_ttl = 2400
+cache_max_ttl = 86400
+cache_neg_min_ttl = 60
+cache_neg_max_ttl = 600
+
+[broken_implementations]
+fragments_blocked = ['cisco', 'cisco-ipv6', 'cisco-familyshield', 'cisco-familyshield-ipv6', 'cleanbrowsing-adult', 'cleanbrowsing-adult-ipv6', 'cleanbrowsing-family', 'cleanbrowsing-family-ipv6', 'cleanbrowsing-security', 'cleanbrowsing-security-ipv6']
+
+[static.outdns]
+# https://dnscrypt.info/stamps/
+# Protocol - DNS-Over-HTTPS
+# Host name - Ваш домен для маскировки
+# Path - /dns
+# Все галочки оставить на месте, остальные поля пустые
+stamp = ''
