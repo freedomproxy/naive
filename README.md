@@ -28,7 +28,7 @@
 
 ## Схема работы
 
-![Картинка](docs/Proxy.drawio.png)
+![Картинка](docs/schema.jpg)
 
 ## Установка
 
